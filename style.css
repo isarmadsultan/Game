@@ -259,3 +259,27 @@ button:hover {
         gap: 10px;
     }
 }
+
+/* Add this new rule for star ratings */
+.star-rating {
+    font-size: 24px;
+    color: #f1c40f;
+    margin: 10px 0;
+}
+
+.star-rating span {
+    margin: 0 2px;
+}
+
+/* Existing CSS below (no other changes needed) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #f5f7fa;
+    padding: 20px;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ... rest of original CSS ... */
