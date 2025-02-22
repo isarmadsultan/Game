@@ -360,7 +360,80 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-    }
+    }   
+        function handleMatch() {
+            setTimeout(() => {
+                flippedCards.forEach(card => {
+                    card.element.classList.add('matched');
+                });
+                flippedCards = [];
+                matchedPairs++;
+                matchesDisplay.textContent = matchedPairs;
+    
+                // Check for game completion after each match
+                checkGameStatus(); // Add this line
+            }, 500);
+        }
+    
+        function checkGameStatus() {
+            // Win condition
+            if (matchedPairs === totalPairs) {
+                endGame(true); // Ensure this is called when all pairs are matched
+            }
+            // Lose condition
+            else if (moves >= maxMoves) {
+                endGame(false);
+            }
+        }
+    
+        function endGame(won) {
+            gameOver = true;
+            clearInterval(timerInterval);
+            
+            if (!won) {
+                showAllCards();
+            }
+            
+            const score = calculateScore(won);
+            let ratingStars = '';
+            
+            if (won) {
+                ratingStars = calculateMemoryRating(moves, maxMoves);
+            }
+    
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            const resultStats = document.getElementById('result-stats');
+            
+            resultTitle.textContent = won ? '🎉 Victory! 🎉' : 'Game Over';
+            resultTitle.style.color = won ? '#2ecc71' : '#e74c3c';
+            
+            resultMessage.textContent = won 
+                ? `Congratulations! You've found all pairs!`
+                : `Sorry! You've run out of moves. Try again?`;
+            
+            resultStats.innerHTML = `
+                <p><strong>Difficulty:</strong> ${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}</p>
+                <p><strong>Pairs found:</strong> ${matchedPairs}/${totalPairs}</p>
+                <p><strong>Moves used:</strong> ${moves}/${maxMoves}</p>
+                <p><strong>Time taken:</strong> ${seconds} seconds</p>
+                ${won ? `<div class="star-rating">Memory Rating: ${ratingStars}</div>` : ''}
+                <p><strong>Final score:</strong> ${score} points</p>
+            `;
+            
+            resultModal.style.display = 'flex'; // Ensure the modal is displayed
+        }
+    
+        // New rating calculation function
+        function calculateMemoryRating(movesUsed, maxAllowedMoves) {
+            const efficiency = ((maxAllowedMoves - movesUsed) / maxAllowedMoves) * 100;
+            
+            if (efficiency >= 80) return '★★★★★ (Photographic Memory!)';
+            if (efficiency >= 60) return '★★★★☆ (Excellent!)';
+            if (efficiency >= 40) return '★★★☆☆ (Good Job!)';
+            if (efficiency >= 20) return '★★☆☆☆ (Keep Practicing!)';
+            return '★☆☆☆☆ (Better Luck Next Time!)';
+        }
     
     // Initialize the game
     startGame('easy');
